@@ -29,29 +29,8 @@ const App = () => {
       id: meal.idMeal,
       category: meal.strCategory,
       area: meal.strArea,
-      instructions: meal.strInstructions,
       name: meal.strMeal,
       img: meal.strMealThumb,
-      ingredients: [
-        Object.entries(meal)
-          .filter(([key, value]) => {
-            if (
-              key.includes("strIngredient") &&
-              value !== "" &&
-              value !== null
-            ) {
-              return true
-            }
-          })
-          .map((item) => item[1]),
-        Object.entries(meal)
-          .filter(([key, value]) => {
-            if (key.includes("strMeasure") && value !== "" && value !== null) {
-              return true
-            }
-          })
-          .map((item) => item[1]),
-      ],
     }
   }
 

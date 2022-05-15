@@ -9,3 +9,21 @@
   width: 70%;
   background-color: white;
 }
+
+a {
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  padding: 20px;
+}
+
+img {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+
+.info {
+  display: flex;
+}

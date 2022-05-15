@@ -104,7 +104,7 @@ const MealModal = ({ showModal, handleClose, id = 0 }) => {
             <Typography variant="body2">
               <b>Instructions</b> : {meal.instructions}
             </Typography>
-            <p>Tags : {meal.tags}</p>
+            <p>Tags : {meal.tags ? meal.tags : "No tags available"}</p>
           </CardContent>
           <CardActions>
             <a href={meal.youtube}>Watch on youtube</a>

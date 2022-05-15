@@ -1,25 +1,91 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import BasicCard from "./components/BasicCard"
+import MealModal from "./components/MealModal"
+import "./App.css"
 
-function App() {
+const App = () => {
+  const [allMeals, setAllMeals] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [currentId, setCurrentId] = useState(null)
+
+  useEffect(() => {
+    const mealCall = async () => {
+      try {
+        const tempData = await axios.get(
+          "https://www.themealdb.com/api/json/v1/1/search.php?f=a"
+        )
+        const tempMeals = tempData.data.meals
+        setAllMeals([...tempMeals])
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    mealCall()
+  }, [])
+
+  const filteredMeal = (meal) => {
+    return {
+      id: meal.idMeal,
+      category: meal.strCategory,
+      area: meal.strArea,
+      instructions: meal.strInstructions,
+      name: meal.strMeal,
+      img: meal.strMealThumb,
+      ingredients: [
+        Object.entries(meal)
+          .filter(([key, value]) => {
+            if (
+              key.includes("strIngredient") &&
+              value !== "" &&
+              value !== null
+            ) {
+              return true
+            }
+          })
+          .map((item) => item[1]),
+        Object.entries(meal)
+          .filter(([key, value]) => {
+            if (key.includes("strMeasure") && value !== "" && value !== null) {
+              return true
+            }
+          })
+          .map((item) => item[1]),
+      ],
+    }
+  }
+
+  const openModal = (id) => {
+    setCurrentId(id)
+    setShowModal(true)
+  }
+  const handleClose = () => {
+    setShowModal(false)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {showModal ? (
+        <MealModal
+          showModal={showModal}
+          handleClose={handleClose}
+          id={currentId}
+        />
+      ) : null}
+      <h1 style={{ textAlign: "center" }}>Meal App</h1>
+      {allMeals.length > 0 ? (
+        allMeals.map((item, ind) => (
+          <BasicCard
+            meal={filteredMeal(item)}
+            key={ind}
+            click={() => openModal(item.idMeal)}
+          />
+        ))
+      ) : (
+        <h3>Loading...</h3>
+      )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
